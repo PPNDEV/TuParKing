@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "TuParKing",
+    "slug": "TuParKing",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./src/assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.castillo.tuparking"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.castillo.tuparking"
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    }
+  }
+}
