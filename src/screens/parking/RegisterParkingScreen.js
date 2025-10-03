@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // <-- ACTUALIZADO
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
+
+// IMPORTACIONES CORRECTAS (sin llaves, porque son export default)
 import AuthButton from '../../components/common/AuthButton';
 import TimePickerModal from '../../components/parking/TimePickerModal';
 
@@ -19,9 +22,15 @@ const RegisterParkingScreen = ({ navigation }) => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentDateTime(new Date()), 1000);
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleRegisterParking = () => {
+    console.log(`Registrando parqueo por ${parkingTime} minutos.`);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -55,7 +64,7 @@ const RegisterParkingScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.footer}>
-          <AuthButton title="Registrar Parqueo" onPress={() => {}} />
+          <AuthButton title="Registrar Parqueo" onPress={handleRegisterParking} />
         </View>
       </View>
       <TimePickerModal
@@ -86,3 +95,4 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterParkingScreen;
+

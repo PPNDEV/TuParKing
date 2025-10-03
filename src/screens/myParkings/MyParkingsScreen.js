@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // <-- ACTUALIZADO
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 
@@ -7,8 +8,7 @@ const PARKING_RECORDS = [
   { id: '1', placa: 'GSM4780', startTime: new Date('2025-10-02T21:30:00'), endTime: new Date('2025-10-02T22:30:00'), duration: 60, status: 'active' },
   { id: '2', placa: 'PBA-1234', startTime: new Date('2025-10-02T20:15:00'), endTime: new Date('2025-10-02T20:45:00'), duration: 30, status: 'expired' },
   { id: '3', placa: 'GSN3780', startTime: new Date('2025-10-01T10:27:00'), endTime: new Date('2025-10-01T11:57:00'), duration: 90, status: 'expired' },
-  { id: '4', placa: 'ABC-0987', startTime: new Date('2025-10-02T22:00:00'), endTime: new Date('2025-10-03T00:00:00'), duration: 120, status: 'active' },
-].sort((a, b) => (a.status === 'active' ? -1 : 1));
+].sort((a, b) => (a.status === 'active' ? -1 : 1)); 
 
 const StatusBadge = ({ status }) => {
   const isActive = status === 'active';
@@ -36,7 +36,7 @@ const ParkingRecordItem = ({ item }) => {
           <Text style={styles.dateText}>{date}</Text>
           <Text style={styles.timeText}>{timeRange}</Text>
         </View>
-        <Text style={styles.durationText}>{item.duration} min</Text>
+        <Text style={styles.durationText}>{`${item.duration} min`}</Text>
       </View>
     </View>
   );
@@ -51,8 +51,15 @@ const MyParkingsScreen = () => {
           renderItem={({ item }) => <ParkingRecordItem item={item} />}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingTop: 10 }}
-          ListHeaderComponent={ <View style={styles.header}> <Feather name="list" size={24} color={COLORS.textSecondary} /> <Text style={styles.headerText}>Historial de parqueos</Text> </View> }
-          ListEmptyComponent={ <Text style={styles.emptyText}>No tienes parqueos registrados.</Text> }
+          ListHeaderComponent={
+            <View style={styles.header}>
+              <Feather name="list" size={24} color={COLORS.textSecondary} />
+              <Text style={styles.headerText}>Historial de parqueos</Text>
+            </View>
+          }
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No tienes parqueos registrados.</Text>
+          }
         />
       </View>
     </SafeAreaView>
@@ -78,3 +85,4 @@ const styles = StyleSheet.create({
 });
 
 export default MyParkingsScreen;
+
