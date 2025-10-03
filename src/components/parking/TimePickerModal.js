@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
-const DEFAULT_TIME_OPTIONS = [5, 10, 15, 20, 25, 30, 45, 60, 90, 120, 180];
+const DEFAULT_TIME_OPTIONS = [30, 60, 90, 120, 150, 180];
 
 const TimePickerModal = ({
 	isVisible,
@@ -59,7 +59,7 @@ const TimePickerModal = ({
 									onPress={() => handleSelect(item)}
 								>
 									<Text style={[styles.optionText, isActive && styles.optionTextActive]}>
-										{item} minutos
+										{item}
 									</Text>
 								</TouchableOpacity>
 							);
