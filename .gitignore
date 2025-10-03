@@ -1,0 +1,28 @@
+# Dependencias
+# Esta carpeta se regenera con 'npm install'
+node_modules/
+
+# Archivos de caché y configuración de Expo
+# Se regeneran al ejecutar el proyecto
+.expo/
+.expo-shared/
+
+# Carpetas de build nativo (¡LAS MÁS IMPORTANTES!)
+# Contienen archivos compilados y específicos de cada máquina
+android/build/
+android/app/build/
+ios/build/
+
+# Archivos de entorno con secretos
+# Cada desarrollador debe tener el suyo y nunca se suben al repositorio
+.env
+
+# Logs y archivos temporales de npm/yarn
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
