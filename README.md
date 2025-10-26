@@ -1,351 +1,246 @@
-# TuParKing 🚗📍  
-_Plataforma móvil para encontrar, reservar y gestionar estacionamientos en tiempo real._
+# 📱 TuParKing - Frontend
 
-> Proyecto desarrollado con **React Native + Expo**, orientado inicialmente a dispositivos **Android** (desarrollo y construcción mediante **Android Studio**) utilizando **Visual Studio Code** como entorno principal.
+Sistema de gestión y reserva de espacios de estacionamiento desarrollado con React Native y Expo.
 
----
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
 
-## 🌐 Descripción
+## 🚀 Características
 
-**TuParKing** busca optimizar la experiencia de los conductores al:
-- Localizar parqueaderos disponibles cercanos.
-- Administrar reservas (crear, confirmar, cancelar).
-- Integrarse con servicios de mapas y (opcional) pagos.
-- Ofrecer un panel (futuro) para operadores de estacionamientos.
+- ✅ **Autenticación** - Login y registro de usuarios
+- ✅ **Dashboard** - Visualización de saldo y estadísticas
+- ✅ **Parqueaderos** - Búsqueda y listado con indicadores de disponibilidad
+- ✅ **Recarga de Saldo** - Sistema completo con múltiples métodos de pago
+- ✅ **Gestión de Vehículos** - CRUD completo de vehículos
+- ✅ **Reservas** - Visualización y gestión de reservas
+- ✅ **Perfil** - Información del usuario
+- ✅ **Actualización Automática** - Focus listener y pull-to-refresh
 
----
-
-## ✨ Características Clave (Actuales / Planeadas)
-
-- 🔍 Búsqueda de parqueaderos por ubicación.
-- 🗺️ Mapa interactivo (Google Maps / Mapbox / Expo Location).
-- ✅ Ver disponibilidad en tiempo (casi) real.
-- 📝 Gestión de reservas.
-- 🔔 Notificaciones (Push / locales).
-- 👤 Autenticación (Email/Password / Social login - opcional).
-- 💳 Pasarela de pagos (Stripe / MercadoPago - planeado).
-- 🧾 Historial de reservas.
-- 🛠️ Panel administrativo (futuro / web o mobile admin mode).
-- 📊 Métricas de uso (planeado).
-
-> Ajusta la lista según el estado real del proyecto.
-
----
-
-## 🧱 Stack Tecnológico
-
-| Capa | Tecnología |
-|------|------------|
-| Framework Mobile | React Native (Expo) |
-| Entorno Dev | Expo CLI / Expo Go / VS Code |
-| Lenguaje | JavaScript / TypeScript (si aplica) |
-| Navegación | React Navigation |
-| Estado global | Zustand / Redux Toolkit / Context API (elige uno) |
-| Red / API | fetch / Axios |
-| Mapa | react-native-maps / expo-location |
-| Notificaciones | Expo Notifications |
-| Backend (API) | (Coloca aquí: Node.js / Django / Firebase / Supabase / etc.) |
-| Autenticación | (Ej: JWT / Firebase Auth / Clerk / Auth0) |
-| Calidad | ESLint, Prettier, TypeScript (si aplica) |
-| Testing | Jest / React Native Testing Library |
-| Build | EAS Build / Gradle (Android Studio) |
-
-> Reemplaza o elimina lo que no aplique.
-
----
-
-## 📁 Estructura de Carpetas (Sugerida)
-
-```
-TuParKing/
-├─ app/                      # (Si usas Expo Router) pantallas
-│  ├─ (auth)/                # flujo de autenticación
-│  ├─ (main)/                # pantallas principales
-│  └─ _layout.tsx
-├─ src/
-│  ├─ components/            # UI reutilizable
-│  ├─ screens/               # (si no usas app/)
-│  ├─ navigation/            # stacks / tabs
-│  ├─ hooks/
-│  ├─ store/                 # estado global
-│  ├─ services/              # API calls, clientes
-│  ├─ utils/                 # helpers
-│  ├─ config/                # constantes, env mapping
-│  └─ types/                 # definiciones TypeScript
-├─ assets/
-│  ├─ images/
-│  ├─ icons/
-│  └─ fonts/
-├─ .env                      # variables (NO commitear)
-├─ app.json / expo.json
-├─ package.json
-└─ README.md
-```
-
-> Ajusta a tu estructura real.
-
----
-
-## 🔧 Requisitos Previos
-
-- Node.js (LTS)
-- npm / yarn / pnpm
-- Expo CLI (`npm install -g expo-cli` opcional con versiones antiguas)
-- Cuenta en [Expo](https://expo.dev/) (para builds en la nube)
-- Android:
-  - Android Studio (SDK, emulador, platform-tools)
-  - Dispositivo físico con Depuración USB activada (opcional)
-
----
-
-## 🚀 Instalación y Ejecución en Desarrollo
-
-```bash
-# 1. Clonar
-git clone https://github.com/PPNDEV/TuParKing.git
-cd TuParKing
-
-# 2. Instalar dependencias
-npm install
-# o
-yarn
-# o
-pnpm install
-
-# 3. Variables de entorno
-cp .env.example .env
-# Editar valores (API_URL, MAPS_API_KEY, etc.)
-
-# 4. Iniciar en modo desarrollo
-npx expo start
-# abrir:
-#   - presiona "a" para emulador Android
-#   - escanea QR con Expo Go
-```
-
----
-
-## ⚙️ Variables de Entorno (Ejemplo)
-
-Crea `.env` (usa `dotenv` / `expo-constants` / `react-native-config` según tu setup):
-
-```
-API_BASE_URL=https://api.midominio.com
-MAPS_API_KEY=XXXXXXXXXXXXXXXXXXXX
-SENTRY_DSN=
-EXPO_PUBLIC_ENV=production
-```
-
-> Variables públicas en Expo 49+: prefijar con `EXPO_PUBLIC_`.
-
----
-
-## 🧪 Scripts (Ejemplo)
-
-Agrega en package.json según tu flujo:
+## 🛠️ Tecnologías
 
 ```json
 {
-  "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "build:android:apk": "eas build --platform android --profile preview",
-    "build:android:release": "eas build --platform android --profile production",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "jest"
-  }
+  "framework": "React Native",
+  "platform": "Expo",
+  "navigation": "React Navigation",
+  "state": "Context API",
+  "http": "Fetch API",
+  "icons": "Expo Vector Icons (Feather)"
 }
 ```
 
----
+## 📁 Estructura del Proyecto
 
-## 📦 Generar Build Android
-
-Opción A - EAS (recomendado):
-```bash
-npm install -g eas-cli
-eas login
-eas build:configure
-eas build --platform android --profile preview   # .apk (si config)
-eas build --platform android --profile production
+```
+TuParKing/
+├── src/
+│   ├── components/
+│   │   ├── common/          # Componentes reutilizables
+│   │   └── dashboard/       # Componentes del dashboard
+│   ├── constants/           # Colores y constantes
+│   ├── contexts/            # Context API (Auth)
+│   ├── navigation/          # Configuración de navegación
+│   └── screens/             # Todas las pantallas
+│       ├── auth/            # Login, Register
+│       ├── mainMenu/        # Home/Dashboard
+│       ├── parking/         # Parqueaderos
+│       ├── reservation/     # Reservas
+│       ├── recharge/        # Recarga de saldo
+│       ├── vehicle/         # Vehículos
+│       └── profile/         # Perfil
+├── App.js                   # Punto de entrada
+├── package.json             # Dependencias
+└── README.md               # Documentación
 ```
 
-Opción B - Prebuild + Gradle:
-```bash
-npx expo prebuild
-cd android
-./gradlew assembleRelease
-```
+## 📦 Instalación
 
-El .apk/.aab quedará en:
-`android/app/build/outputs/`
+### Prerrequisitos
+- Node.js >= 14
+- npm o yarn
+- Expo CLI
+- Backend corriendo en `http://localhost:3000`
 
----
-
-## 🔔 Notificaciones (Expo)
-
-1. Habilitar permisos en `app.json` (android & ios - futuro).
-2. Implementar registro de token:
-
-```ts
-import * as Notifications from 'expo-notifications';
-```
-
-3. Backend debe almacenar tokens por usuario.
-
----
-
-## 🛰️ Consumo de API (Ejemplo Axios Wrapper)
-
-```ts
-// src/services/http.ts
-import axios from 'axios';
-
-export const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://api.local',
-  timeout: 10000
-});
-
-// Interceptores: auth token, logs, retries, etc.
-```
-
----
-
-## 🗺️ Mapa (Ejemplo básico)
-
-```tsx
-import MapView, { Marker } from 'react-native-maps';
-
-<MapView style={{ flex: 1 }}>
-  {parkings.map(p => (
-    <Marker
-      key={p.id}
-      coordinate={{ latitude: p.lat, longitude: p.lng }}
-      title={p.nombre}
-      description={`Espacios: ${p.disponibles}`}
-    />
-  ))}
-</MapView>
-```
-
----
-
-## 🔐 Autenticación (Flujo sugerido)
-
-1. Pantalla Login / Registro.
-2. Llamada a API → token JWT.
-3. Guardar token seguro (SecureStore / AsyncStorage).
-4. Inyectar en headers (interceptor).
-5. Refrescar tokens (si aplica).
-
----
-
-## 🧩 Estado Global (Ejemplo con Zustand)
-
-```ts
-import { create } from 'zustand';
-
-export const useUserStore = create(set => ({
-  user: null,
-  setUser: (u) => set({ user: u }),
-  logout: () => set({ user: null })
-}));
-```
-
----
-
-## ✅ Calidad y Estándares
-
-- ESLint + Prettier + (TypeScript)
-- Convención commits: Conventional Commits (`feat:`, `fix:`, etc.)
-- Branch naming: `feature/`, `bugfix/`, `hotfix/`
-- PR checklist: lint + tests + screenshots (si UI)
-
----
-
-## 🧪 Testing (Ejemplo)
+### Pasos
 
 ```bash
-npm run test
+# Clonar repositorio
+git clone https://github.com/PPNDEV/TuParKing.git
+
+# Instalar dependencias
+cd TuParKing
+npm install
+
+# Iniciar aplicación
+npx expo start
 ```
 
-```ts
-import { render } from '@testing-library/react-native';
-import App from '../App';
+## 🖥️ Ejecutar
 
-test('App renders', () => {
-  const { getByText } = render(<App />);
-  // expect(getByText('TuParKing')).toBeTruthy();
-});
+Después de `npx expo start`:
+
+- **Web**: Presionar `w` en la terminal
+- **Android**: Presionar `a` (requiere Android Studio)
+- **iOS**: Presionar `i` (requiere Xcode, solo macOS)
+
+## 🎨 Paleta de Colores
+
+```javascript
+primary: '#2563eb'        // Azul principal
+secondary: '#10b981'      // Verde secundario
+background: '#f3f4f6'     // Fondo gris claro
+success: '#10b981'        // Verde éxito
+error: '#ef4444'          // Rojo error
+warning: '#f59e0b'        // Naranja advertencia
 ```
 
----
+## 🔐 Autenticación
 
-## 🛣️ Roadmap (Propuesto)
+El sistema usa **JWT (JSON Web Tokens)** para autenticación:
 
-| Fase | Objetivo | Estado |
-|------|----------|--------|
-| MVP | Búsqueda + mapa + reservas básicas | En progreso |
-| Auth | Login/Registro + roles | Pendiente |
-| Notifs | Push notifications | Pendiente |
-| Pagos | Integración pasarela | Pendiente |
-| Admin | Dashboard operador | Planeado |
-| Métricas | Analytics / dashboards | Planeado |
+```javascript
+// Login
+POST /api/auth/login
+Body: { email, password }
+Response: { token, usuario }
 
-> Actualiza estados reales.
+// Register
+POST /api/auth/registro
+Body: { nombre, email, password, telefono, direccion }
+```
 
----
+## 📱 Pantallas Principales
+
+### 1. **MainMenuScreen** (Home)
+- Visualización de saldo actual
+- Contador de reservas activas
+- Contador de vehículos registrados
+- Grid de 6 acciones rápidas
+
+### 2. **ParkingListScreen**
+- Lista de parqueaderos con búsqueda
+- Indicadores de disponibilidad con colores
+- Saldo en header
+- Pull-to-refresh
+
+### 3. **RechargeScreen**
+- Montos predefinidos ($5, $10, $20, $50, $100)
+- Monto personalizado
+- 3 métodos de pago
+- Confirmación y actualización automática
+
+### 4. **VehicleListScreen**
+- Lista de vehículos del usuario
+- Opción de agregar/eliminar
+- Visualización de marca, modelo, placa
+
+### 5. **ReservationScreen**
+- Mis reservas activas
+- Filtros por estado
+- Opciones de finalizar/cancelar
+
+## 🔄 Actualización de Datos
+
+### Focus Listener
+Actualiza datos automáticamente al volver a la pantalla:
+
+```javascript
+useEffect(() => {
+  const unsubscribe = navigation.addListener('focus', () => {
+    cargarDatos();
+  });
+  return unsubscribe;
+}, [navigation]);
+```
+
+### Pull-to-Refresh
+Todas las pantallas principales tienen refresh manual:
+
+```javascript
+<RefreshControl
+  refreshing={refreshing}
+  onRefresh={onRefresh}
+/>
+```
+
+## 🌐 Endpoints del Backend
+
+```javascript
+// Autenticación
+POST   /api/auth/login
+POST   /api/auth/registro
+GET    /api/auth/perfil
+
+// Parqueaderos
+GET    /api/parqueaderos
+GET    /api/parqueaderos/:id
+
+// Reservas
+GET    /api/reservas
+POST   /api/reservas
+PUT    /api/reservas/:id/finalizar
+PUT    /api/reservas/:id/cancelar
+
+// Vehículos
+GET    /api/vehiculos
+POST   /api/vehiculos
+DELETE /api/vehiculos/:id
+
+// Transacciones
+POST   /api/transacciones/recarga
+GET    /api/transacciones/cuenta
+```
+
+## 🐛 Debugging
+
+Todos los endpoints tienen logs para debugging:
+
+```javascript
+console.log('📤 Enviando:', body);
+console.log('📥 Respuesta:', data);
+console.log('✅ Éxito:', mensaje);
+console.log('❌ Error:', error);
+```
+
+## 📊 Estado de Desarrollo
+
+### ✅ Completado
+- [x] Sistema de autenticación
+- [x] Dashboard principal
+- [x] Lista de parqueaderos
+- [x] Recarga de saldo funcional
+- [x] Gestión de vehículos (CRUD)
+- [x] Visualización de reservas
+- [x] Perfil de usuario
+- [x] Actualización automática de saldo
+
+### 🚧 Pendiente
+- [ ] Detalle de parqueadero con mapa
+- [ ] Crear reserva completa
+- [ ] Finalizar/Cancelar reservas
+- [ ] Historial de transacciones
+- [ ] Editar perfil
+- [ ] Notificaciones push
+- [ ] Modo oscuro
+- [ ] Integración con pasarelas de pago reales
 
 ## 🤝 Contribuir
 
-1. Fork
-2. Crear rama: `git checkout -b feature/nueva-funcionalidad`
-3. Commit: `git commit -m "feat: agrega X"`
-4. Push: `git push origin feature/nueva-funcionalidad`
-5. Pull Request
-
-Incluye:
-- Descripción clara
-- Screenshots (si UI)
-- Referencia a issue (si existe)
-
----
-
-## 🐞 Reporte de Errores
-
-Abrir un issue con:
-- Descripción
-- Pasos para reproducir
-- Resultado esperado vs actual
-- Logs (si aplica)
-- Dispositivo / versión Android
-
----
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m '✨ feat: Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
 
 ## 📄 Licencia
 
-Este proyecto está bajo licencia MIT (o la que elijas).  
-Ver [LICENSE](LICENSE).
+MIT License - Libre uso para proyectos educativos y comerciales.
+
+## 👥 Autor
+
+**PPNDEV**  
+GitHub: [@PPNDEV](https://github.com/PPNDEV)
 
 ---
 
-## 👥 Créditos
-
-Desarrollado por el equipo [PPNDEV](https://github.com/PPNDEV).  
-¿Dudas o ideas? Abre un issue o envía un PR.
-
----
-
-## 🧩 Próximos Pasos para Mejorar el README
-
-- Agregar capturas (carpeta `assets/`).
-- Incluir diagramas (flujo auth, arquitectura).
-- Documentar endpoints (OpenAPI / Swagger).
-- Añadir CI (GitHub Actions).
-- Añadir sección de métricas de rendimiento.
-
----
-
-¡Gracias por usar y mejorar TuParKing! 🚘💨  
-Si este proyecto te parece útil, considera darle una ⭐ en GitHub.
+⭐ Si te gusta el proyecto, dale una estrella en GitHub!
