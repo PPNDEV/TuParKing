@@ -1,38 +1,130 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
 
-// Datos de ejemplo. Esto vendrá de tu API en el futuro.
-const USER_VEHICLES = [
-  { id: '1', placa: 'PBA-1234', marca: 'Chevrolet', color: 'Rojo' },
-  { id: '2', placa: 'GSD-5678', marca: 'Kia', color: 'Blanco' },
-  { id: '3', placa: 'ABC-0987', marca: 'Hyundai', color: 'Gris' },
-  { id: '4', placa: 'PCH-5555', marca: 'Nissan', color: 'Negro' },
-  { id: '5', placa: 'LBA-1122', marca: 'Toyota', color: 'Azul' },
-];
+const API_URL = 'http://localhost:3000/api';
 
 // Componente para renderizar cada fila de vehículo
-const VehicleItem = ({ placa, marca, color }) => (
+const VehicleItem = ({ placa, marca, color, onDelete }) => (
   <View style={styles.itemContainer}>
     <Text style={[styles.itemText, styles.placaColumn]}>{placa}</Text>
-    <Text style={[styles.itemText, styles.marcaColumn]}>{marca}</Text>
-    <Text style={[styles.itemText, styles.colorColumn]}>{color}</Text>
+    <Text style={[styles.itemText, styles.marcaColumn]}>{marca || '-'}</Text>
+    <Text style={[styles.itemText, styles.colorColumn]}>{color || '-'}</Text>
+    <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
+      <Feather name="trash-2" size={18} color={COLORS.error} />
+    </TouchableOpacity>
   </View>
 );
 
-const VehicleListScreen = () => {
+const VehicleListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [vehiculos, setVehiculos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { token } = useContext(AuthContext);
 
-  // Lógica de filtrado (se ejecuta solo cuando cambia la búsqueda o la lista de vehículos)
+  // Cargar vehículos al montar el componente
+  useEffect(() => {
+    cargarVehiculos();
+  }, []);
+
+  // Recargar cuando la pantalla recibe foco
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      cargarVehiculos();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const cargarVehiculos = async () => {
+  try {
+    setLoading(true);
+    console.log('🚀 Cargando vehículos...');
+    console.log('🚀 Token:', token);
+    console.log('🚀 URL:', `${API_URL}/vehiculos`);
+    
+    const response = await fetch(`${API_URL}/vehiculos`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    console.log('🚀 Response status:', response.status);
+    
+    const data = await response.json();
+    console.log('🚀 Response data:', data);
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Error al cargar vehículos');
+    }
+
+    console.log('✅ Vehículos cargados:', data.vehiculos);
+    setVehiculos(data.vehiculos);
+  } catch (error) {
+    console.error('❌ Error al cargar vehículos:', error);
+    Alert.alert('Error', 'No se pudieron cargar los vehículos');
+  } finally {
+    setLoading(false);
+  }
+  };
+
+  const eliminarVehiculo = async (id, placa) => {
+    Alert.alert(
+      'Confirmar eliminación',
+      `¿Estás seguro de eliminar el vehículo ${placa}?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const response = await fetch(`${API_URL}/vehiculos/${id}`, {
+                method: 'DELETE',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                },
+              });
+
+              const data = await response.json();
+
+              if (!response.ok) {
+                throw new Error(data.error || 'Error al eliminar vehículo');
+              }
+
+              Alert.alert('Éxito', 'Vehículo eliminado correctamente');
+              cargarVehiculos(); // Recargar lista
+            } catch (error) {
+              console.error('Error al eliminar vehículo:', error);
+              Alert.alert('Error', error.message);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  // Lógica de filtrado
   const filteredVehicles = useMemo(() => {
     if (!searchQuery) {
-      return USER_VEHICLES;
+      return vehiculos;
     }
-    return USER_VEHICLES.filter(vehicle =>
+    return vehiculos.filter(vehicle =>
       vehicle.placa.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, vehiculos]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={styles.loadingText}>Cargando vehículos...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -52,6 +144,15 @@ const VehicleListScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Botón para agregar vehículo */}
+        <TouchableOpacity 
+          style={styles.addButton}
+          onPress={() => navigation.navigate('AddVehicle')}
+        >
+          <Feather name="plus" size={20} color={COLORS.white} />
+          <Text style={styles.addButtonText}>Agregar Vehículo</Text>
+        </TouchableOpacity>
+
         {/* --- Tabla de Vehículos --- */}
         <View style={styles.tableContainer}>
           {/* Encabezado de la tabla */}
@@ -59,16 +160,29 @@ const VehicleListScreen = () => {
             <Text style={[styles.headerText, styles.placaColumn]}>PLACA</Text>
             <Text style={[styles.headerText, styles.marcaColumn]}>MARCA</Text>
             <Text style={[styles.headerText, styles.colorColumn]}>COLOR</Text>
+            <Text style={[styles.headerText, styles.actionColumn]}>ACCIÓN</Text>
           </View>
 
           {/* Lista de vehículos */}
           <FlatList
             data={filteredVehicles}
-            renderItem={({ item }) => <VehicleItem {...item} />}
-            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <VehicleItem 
+                {...item} 
+                onDelete={() => eliminarVehiculo(item.id, item.placa)}
+              />
+            )}
+            keyExtractor={(item) => item.id.toString()}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No se encontraron vehículos.</Text>
+                <Feather name="inbox" size={50} color={COLORS.textSecondary} />
+                <Text style={styles.emptyText}>No tienes vehículos registrados</Text>
+                <TouchableOpacity 
+                  style={styles.emptyButton}
+                  onPress={() => navigation.navigate('AddVehicle')}
+                >
+                  <Text style={styles.emptyButtonText}>Agregar mi primer vehículo</Text>
+                </TouchableOpacity>
               </View>
             }
           />
@@ -78,7 +192,6 @@ const VehicleListScreen = () => {
   );
 };
 
-// ... Estilos abajo
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -88,9 +201,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: COLORS.textSecondary,
+  },
   searchContainer: {
     flexDirection: 'row',
-    marginBottom: 25,
+    marginBottom: 15,
   },
   searchInput: {
     flex: 1,
@@ -111,11 +234,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  addButton: {
+    flexDirection: 'row',
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
+  },
+  addButtonText: {
+    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
   tableContainer: {
     flex: 1,
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    overflow: 'hidden', // Importante para que los bordes redondeados se apliquen a la lista
+    overflow: 'hidden',
     borderWidth: 1,
     borderColor: COLORS.lightGray,
   },
@@ -139,30 +278,51 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
+    alignItems: 'center',
   },
   itemText: {
     fontSize: 15,
     color: COLORS.text,
   },
   placaColumn: {
-    flex: 0.4,
+    flex: 0.3,
     fontWeight: 'bold',
   },
   marcaColumn: {
-    flex: 0.4,
+    flex: 0.3,
   },
   colorColumn: {
     flex: 0.2,
   },
+  actionColumn: {
+    flex: 0.2,
+    textAlign: 'center',
+  },
+  deleteButton: {
+    flex: 0.2,
+    alignItems: 'center',
+  },
   emptyContainer: {
-    padding: 30,
+    padding: 40,
     alignItems: 'center',
   },
   emptyText: {
     fontSize: 16,
     color: COLORS.textSecondary,
+    marginTop: 15,
+    marginBottom: 20,
+  },
+  emptyButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  emptyButtonText: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
-
 
 export default VehicleListScreen;

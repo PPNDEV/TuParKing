@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, StatusBar, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, SafeAreaView, StatusBar, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
 import AuthTextInput from '../../components/common/AuthTextInput';
@@ -7,8 +7,33 @@ import AuthButton from '../../components/common/AuthButton';
 
 const LoginScreen = ({ navigation }) => {
   const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
+  const [clave, setClave] = useState('');
+  const [loading, setLoading] = useState(false);
+  
   const { login } = useContext(AuthContext);
+
+    const handleLogin = async () => {
+    // Validar que los campos no estén vacíos
+    if (!correo || !clave) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
+
+    console.log('🔐 Iniciando proceso de login...');
+    setLoading(true);
+    const resultado = await login(correo, clave);
+    setLoading(false);
+
+    console.log('📊 Resultado del login:', resultado);
+
+    if (!resultado.success) {
+      Alert.alert('Error', resultado.error || 'No se pudo iniciar sesión');
+    } else {
+      console.log('✅ Login exitoso en LoginScreen');
+    }
+    // Si el login es exitoso, el AuthContext cambiará userIsLoggedIn a true
+    // y App.js mostrará automáticamente el AppNavigator
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -18,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
         style={styles.container}
       >
         <Image 
-          source={require('../../assets/icon.png')} // Usando el ícono local
+          source={require('../../assets/icon.png')}
           style={styles.logo} 
         />
         <Text style={styles.title}>Bienvenido a TuParKing</Text>
@@ -34,8 +59,8 @@ const LoginScreen = ({ navigation }) => {
         />
         <AuthTextInput
           icon="lock"
-          value={contrasena}
-          onChangeText={setContrasena}
+          value={clave}
+          onChangeText={setClave}
           placeholder="Contraseña"
           secureTextEntry
         />
@@ -44,7 +69,11 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
 
-        <AuthButton title="Ingresar" onPress={login} />
+        {loading ? (
+          <ActivityIndicator size="large" color={COLORS.primary} style={styles.loader} />
+        ) : (
+          <AuthButton title="Ingresar" onPress={handleLogin} />
+        )}
 
         <View style={styles.registerContainer}>
           <Text style={styles.registerText}>¿No tienes una cuenta? </Text>
@@ -92,6 +121,9 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
+  loader: {
+    marginVertical: 20,
+  },
   registerContainer: {
     flexDirection: 'row',
     marginTop: 40,
@@ -108,4 +140,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-

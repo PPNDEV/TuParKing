@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
 import AuthButton from '../../components/common/AuthButton';
+
+const API_URL = 'http://localhost:3000/api';
 
 // Componente para mostrar cada campo de información
 const InfoRow = ({ icon, label, value }) => (
@@ -10,20 +13,67 @@ const InfoRow = ({ icon, label, value }) => (
     <Feather name={icon} size={20} color={COLORS.primary} style={styles.icon} />
     <View>
       <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>{value}</Text>
+      <Text style={styles.value}>{value || 'No especificado'}</Text>
     </View>
   </View>
 );
 
 const ProfileScreen = ({ navigation }) => {
-  // Estos datos vendrían de tu AuthContext o de una llamada a la API
-  const userData = {
-    correo: 'brandoncastill761@gmail.com',
-    nombres: 'Brandon Castillo',
-    telefono: '0980087552',
-    cedula: '0706175189',
-    direccion: 'Cdla. El Paraiso',
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    cargarPerfil();
+  }, []);
+
+  const cargarPerfil = async () => {
+    try {
+      setLoading(true);
+      
+      const response = await fetch(`${API_URL}/auth/perfil`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al cargar perfil');
+      }
+
+      setUserData(data.usuario);
+    } catch (error) {
+      console.error('Error al cargar perfil:', error);
+      Alert.alert('Error', 'No se pudo cargar la información del perfil');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.primary} />
+          <Text style={styles.loadingText}>Cargando perfil...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.loadingContainer}>
+          <Feather name="alert-circle" size={50} color={COLORS.error} />
+          <Text style={styles.errorText}>No se pudo cargar el perfil</Text>
+          <AuthButton title="Reintentar" onPress={cargarPerfil} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -32,7 +82,7 @@ const ProfileScreen = ({ navigation }) => {
           <View style={styles.avatarContainer}>
             <Feather name="user" size={50} color={COLORS.primary} />
           </View>
-          <Text style={styles.userName}>{userData.nombres}</Text>
+          <Text style={styles.userName}>{userData.nombre}</Text>
           <Text style={styles.userEmail}>{userData.correo}</Text>
         </View>
 
@@ -40,6 +90,8 @@ const ProfileScreen = ({ navigation }) => {
           <InfoRow icon="phone" label="Teléfono" value={userData.telefono} />
           <InfoRow icon="hash" label="Cédula" value={userData.cedula} />
           <InfoRow icon="map-pin" label="Dirección" value={userData.direccion} />
+          <InfoRow icon="calendar" label="Fecha de Nacimiento" value={userData.fecha_nacimiento} />
+          <InfoRow icon="dollar-sign" label="Saldo" value={`$${userData.saldo?.toFixed(2) || '0.00'}`} />
         </View>
 
         <AuthButton 
@@ -51,10 +103,27 @@ const ProfileScreen = ({ navigation }) => {
   );
 };
 
-// ... (Estilos abajo)
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.background },
   container: { flex: 1, padding: 20 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: COLORS.textSecondary,
+  },
+  errorText: {
+    marginTop: 15,
+    marginBottom: 20,
+    fontSize: 16,
+    color: COLORS.error,
+    textAlign: 'center',
+  },
   header: { alignItems: 'center', marginBottom: 30 },
   avatarContainer: {
     width: 100,
@@ -73,6 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 12,
     padding: 10,
+    marginBottom: 20,
   },
   infoRow: {
     flexDirection: 'row',
@@ -85,6 +155,5 @@ const styles = StyleSheet.create({
   label: { fontSize: 14, color: COLORS.textSecondary, marginBottom: 2 },
   value: { fontSize: 16, color: COLORS.text, fontWeight: '600' },
 });
-
 
 export default ProfileScreen;

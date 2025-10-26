@@ -13,14 +13,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.castillo.tuparking"
+      "bundleIdentifier": "com.sherm.tuparking"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.castillo.tuparking"
+      "package": "com.sherm.tuparking"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
