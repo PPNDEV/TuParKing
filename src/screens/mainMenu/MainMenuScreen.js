@@ -14,8 +14,7 @@ import { Feather } from '@expo/vector-icons';
 import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
 import DashboardCard from '../../components/dashboard/DashboardCard';
-
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from '../../constants/api';
 
 const MainMenuScreen = ({ navigation }) => {
   const { user, token } = useContext(AuthContext);

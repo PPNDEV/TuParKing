@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList, TextInput, TouchableOpa
 import { Feather } from '@expo/vector-icons';
 import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
-
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from '../../constants/api';
 
 // Componente para renderizar cada fila de vehículo
 const VehicleItem = ({ placa, marca, color, onDelete }) => (

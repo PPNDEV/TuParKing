@@ -4,8 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
 import AuthButton from '../../components/common/AuthButton';
-
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from '../../constants/api';
 
 // Componente para mostrar cada campo de información
 const InfoRow = ({ icon, label, value }) => (

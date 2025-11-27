@@ -1,9 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// URL de tu API backend
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from '../constants/api';
 
 // Wrapper para AsyncStorage compatible con web
 const storage = {

@@ -15,8 +15,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
-
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from '../../constants/api';
 
 const ParkingDetailScreen = ({ route, navigation }) => {
   const { parkingId } = route.params;

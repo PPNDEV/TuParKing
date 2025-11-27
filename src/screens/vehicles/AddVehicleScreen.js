@@ -4,8 +4,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { COLORS } from '../../constants/colors';
 import AuthTextInput from '../../components/common/AuthTextInput';
 import AuthButton from '../../components/common/AuthButton';
-
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from '../../constants/api';
 
 const AddVehicleScreen = ({ navigation }) => {
   const [placa, setPlaca] = useState('');
