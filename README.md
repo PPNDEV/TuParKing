@@ -55,6 +55,43 @@ TuParKing/
 
 ## 📦 Instalación
 
+## 📚 Dependencias principales
+
+Instálalas automáticamente con `npm install`, pero si necesitas hacerlo manualmente:
+
+```bash
+npm install \
+  expo \
+  react \
+  react-native \
+  expo-linear-gradient \
+  expo-status-bar \
+  expo-constants \
+  expo-secure-store \
+  @react-navigation/native \
+  @react-navigation/native-stack \
+  @react-navigation/bottom-tabs \
+  react-native-gesture-handler \
+  react-native-reanimated \
+  react-native-screens \
+  react-native-safe-area-context \
+  @expo/vector-icons
+```
+
+| Paquete                         | Uso                                      |
+|---------------------------------|------------------------------------------|
+| expo, react, react-native       | Base del proyecto Expo / RN             |
+| expo-linear-gradient            | Gradientes en tarjetas y headers         |
+| expo-status-bar                 | Control de la barra de estado            |
+| expo-constants                  | Variables (`EXPO_PUBLIC_API_URL`)        |
+| expo-secure-store               | Guardar token de sesión                  |
+| @react-navigation/*             | Navegación (stack + tabs)                |
+| react-native-gesture-handler    | Gestos para navegación                   |
+| react-native-reanimated         | Animaciones y tabs                       |
+| react-native-screens            | Optimiza navegación                      |
+| react-native-safe-area-context  | Safe areas                               |
+| @expo/vector-icons              | Iconos Feather/Ionicons                  |
+
 ### Prerrequisitos
 - Node.js >= 14
 - npm o yarn
